@@ -75,34 +75,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
         '404':
-          description: User not found
-  /update:
-    put:
+          description: User not found  
+  /listar:
+    get:
       tags: 
       - usuarios
-      summary: Actualiza a un usuario existente
-      description: Actualiza a un usuario existente
-      operationId: updateUser
-      requestBody:
-        description: Actualiza a un usuario existente
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserRequest'
-        required: true
+      summary: Obtener todos los usuarios
+      description: Obtiene una lista de todos los usuarios registrados en el sistema, junto con sus teléfonos asociados.
+      operationId: listar
       responses:
-        '202':
-          description: Successful operation
+        '200':
+          description: Lista de usuarios con sus teléfonos
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
-        '400':
-          description: Error en la solicitud
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorResponse'          
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+                        
 components:
   schemas:
     UserRequest:
@@ -187,7 +177,7 @@ components:
           type: string
           description: Mensaje del error
           example: El correo no tiene un formato válido           
-    UserLoginRequest:
+    LoginRequest:
       type: object
       properties:
         email:
