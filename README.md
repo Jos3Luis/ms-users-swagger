@@ -1,2 +1,4 @@
 # ms-users-swagger
-Contrato
+Contrato swagger
+Diagrama de secuencia:
+!secuencia](diagramaRegistro.jpg)
