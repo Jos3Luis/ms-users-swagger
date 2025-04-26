@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  title: API de Usuarios
+  version: 1.0.0
+externalDocs:
+  description: Este es un contrato de ejemplo para un servicio que expone operaciones de usuarios basado en la especificación OpenAPI 3.0. Puedes encontrar más información sobre Swagger en [https://swagger.io](https://swagger.io). En la tercera iteración de la tienda de mascotas, ¡hemos adoptado el enfoque de diseño!
+  url: https://swagger.io
+servers:
+  - url: https://demo.swagger.io/api/v3  
+tags:
+ - name: usuarios
+   description: API que permite gestionar los usuarios
+
+paths:
+  /login:
+    post:
+      tags:
+      - usuarios
+      summary: Permite loguear un usuario
+      description: Permite realizar un login para acceder a los servicios del sistema y actualiza la fecha del campo last_login
+      operationId: login
+      requestBody:
+        description: Crea un Nuevo Usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Inautorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: FOrmato Request mal formado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpringDefaultError'
+                
+
+  /register:
+    post:
+      tags: 
+      - usuarios
+      summary: Registrar un nuevo usuario
+      description: Registra un nuevo usuario con nombre, correo electrónico, contraseña y una lista de teléfonos.
+      operationId: registrarUsuario
+      requestBody:
+        description: Crea un Nuevo Usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: User not found
+  /update:
+    put:
+      tags: 
+      - usuarios
+      summary: Actualiza a un usuario existente
+      description: Actualiza a un usuario existente
+      operationId: updateUser
+      requestBody:
+        description: Actualiza a un usuario existente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'          
+components:
+  schemas:
+    UserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Juan Rodriguez'
+        email:
+          type: string
+          example: 'juan@rodriguez.org'
+        password:
+          type: string
+          example: 'P@ssword'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneRequest'
+    PhoneRequest:
+      type: object
+      properties:
+        number:
+          type: string
+          example: '1234567'
+        citycode:
+          type: string
+          example: '1'
+        countrycode:
+          type: string
+          example: '57'
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: '1ht66f64-5717-4562-b3fc-2c963f66af70'
+        created:
+          type: string
+          format: date-time
+          example: '2025-04-23T15:30:00Z'
+        modified:
+          type: string
+          format: date-time
+          example: '2025-04-23T15:30:00Z'
+        last_login:
+          type: string
+          example: '2024-04-23T15:30:00Z'
+        token:
+          type: string
+          example: "18574e7b-2e3e-4aaf-2272-5e6e33d50abf"
+        isactive:
+          type: boolean
+          example: true
+    ValidationErrorResponse:
+      type: object
+      description: Respuesta de error de validación
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Código HTTP de error
+          example: 400
+        message:
+          type: string
+          description: Mensaje general de error
+          example: Error de validación
+        errors:
+          type: array
+          description: Lista de errores por campo
+          items:
+            $ref: '#/components/schemas/FieldErrorDetail'
+    FieldErrorDetail:
+      type: object
+      description: Detalle del error por campo
+      properties:
+        field:
+          type: string
+          description: Campo con error
+          example: email
+        message:
+          type: string
+          description: Mensaje del error
+          example: El correo no tiene un formato válido           
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: juan@rodriguez.org
+        password:
+          type: string
+          example: P@ssword
+    ErrorResponse:
+      type: object
+      description: Respuesta genérica de error
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Código HTTP de error
+          example: 401
+        message:
+          type: string
+          description: Descripción del error
+          example: Credenciales inválidas
+    LoginResponse:
+      type: object
+      description: Respuesta al iniciar sesión
+      properties:
+        token:
+          type: string
+          description: Token JWT generado para el usuario
+          example: 18574e7b-2e3e-4aaf-2272-5e6e33d50abf
+        message:
+          type: string
+          description: Mensaje de bienvenida u observación
+          example: Bienvenido Juan Pérez
+    SpringDefaultError:
+      type: object
+      description: Respuesta genérica de error proporcionada por Spring
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Momento en que ocurrió el error
+          example: "2025-03-26T03:02:07.866+00:00"
+        status:
+          type: integer
+          description: Código de estado HTTP
+          example: 400
+        error:
+          type: string
+          description: Nombre del error HTTP
+          example: Bad Request
+        path:
+          type: string
+          description: Ruta que generó el error
+          example: /api/usuarios/login          
