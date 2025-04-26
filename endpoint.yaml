@@ -74,8 +74,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
-        '404':
-          description: User not found  
+        '409':
+          description: Error al registrar un correo existente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailAlreadyExistsExceptionResponse'           
   /listar:
     get:
       tags: 
@@ -231,4 +235,20 @@ components:
         path:
           type: string
           description: Ruta que generó el error
-          example: /api/usuarios/login          
+          example: /api/usuarios/login
+
+    EmailAlreadyExistsExceptionResponse:
+      type: object
+      description: Respuesta de error de validación
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Código HTTP de error
+          example: 409
+        message:
+          type: string
+          description: Mensaje general de error
+          example: El correo ya existe.
+
+               
