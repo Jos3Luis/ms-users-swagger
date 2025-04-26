@@ -1,4 +1,5 @@
-# ms-users-swagger  
-Contrato swagger  
-Diagrama de secuencia:  
+# Contrato swagger 
+Abrirlo con https://editor.swagger.io/ 
+![secuencia](swagger.jpg)
+# Diagrama de secuencia:  
 ![secuencia](diagramaRegistro.jpg)
